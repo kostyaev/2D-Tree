@@ -4,9 +4,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 
 public class KdTreeTest {
 
@@ -114,4 +117,146 @@ public class KdTreeTest {
         result = tree.rangeSearch(0, 0, 30);
         assertEquals(3, result.size());
     }
+
+
+    @Test
+    public void testFastDelete() {
+        List<Node<Object>> nodes = new ArrayList<>();
+
+        nodes.add(node1);
+        nodes.add(node2);
+        nodes.add(node3);
+        nodes.add(node4);
+        nodes.add(node5);
+
+        KdTree<Object> tree = new KdTree<>(nodes);
+
+        assertTrue(tree.findNearestNeighbour(10, 10).equals(obj2));
+        tree.fastDelete(obj2, node2.getX(), node2.getY());
+        assertTrue(!tree.findNearestNeighbour(10, 10).equals(obj2));
+
+        assertTrue(tree.findNearestNeighbour(0, 10).equals(obj3));
+        tree.fastDelete(obj3, node3.getX(), node3.getY());
+        assertTrue(!tree.findNearestNeighbour(0, 10).equals(obj3));
+
+        assertTrue(tree.findNearestNeighbour(10, 0).equals(obj4));
+        tree.fastDelete(obj4, node4.getX(), node4.getY());
+        assertTrue(!tree.findNearestNeighbour(10, 0).equals(obj4));
+
+    }
+
+    @Test
+    public void testDelete() {
+        KdTree<Object> tree = new KdTree<>();
+        tree.insert(obj1, 0, 0);
+        tree.insert(obj2, 10, 10);
+        tree.insert(obj3, 0, 10);
+        tree.insert(obj4, 10, 0);
+        tree.insert(obj5, 20, 20);
+
+        tree.delete(obj3);
+        assertEquals(4, tree.getSize());
+
+        tree.delete(obj1);
+        assertEquals(3, tree.getSize());
+
+        tree.delete(obj4);
+        assertEquals(2, tree.getSize());
+
+        tree.delete(obj2);
+        assertEquals(1, tree.getSize());
+
+        assertEquals(obj5, tree.findNearestNeighbour(0, 0));
+
+    }
+
+    @Test
+    public void testUpdate() {
+        KdTree<Object> tree = new KdTree<>();
+
+        tree.insert(obj1, 0, 0);
+        tree.insert(obj2, 10, 10);
+
+        assertEquals(obj1, tree.findNearestNeighbour(0, 0));
+
+        tree.insertOrUpdate(obj1, 50, 50);
+        assertEquals(obj2, tree.findNearestNeighbour(0, 0));
+
+        tree.insertOrUpdate(obj5, 20, 20);
+        assertEquals(obj5, tree.findNearestNeighbour(20, 20));
+
+        tree.insertOrUpdate(obj5, 60, 60);
+        assertNotSame(obj5, tree.findNearestNeighbour(20, 20));
+
+
+    }
+
+
+    public boolean isTheSame(List<Object> etalon, List<Object> target) {
+        if (etalon.size() != target.size())
+            return false;
+        for(int i = 0; i<target.size(); i++) {
+            if (!etalon.get(i).equals(target.get(i)))
+                return false;
+        }
+        return true;
+    }
+
+    @Test
+    public void testFindNearestNeighbours() {
+        KdTree<Object> tree = new KdTree<>();
+        tree.insert(obj3, 10, 10);
+        tree.insert(obj2, 0, 5);
+        tree.insert(obj1, 0, 0);
+        tree.insert(obj5, 100, 100);
+        tree.insert(obj4, 50, 50);
+
+
+        assertEquals(5, tree.getSize());
+
+        List<Object> result = tree.findNearestNeighbours(0, 0, 1);
+        assertEquals(1, result.size());
+        List<Object> etalon = new LinkedList<>();
+        etalon.add(obj1);
+        assertTrue(isTheSame(etalon, result));
+
+
+        result = tree.findNearestNeighbours(0, 0, 2);
+        assertEquals(2, result.size());
+        etalon = new LinkedList<>();
+        etalon.add(obj1);
+        etalon.add(obj2);
+        assertTrue(isTheSame(etalon, result));
+
+        result = tree.findNearestNeighbours(0, 0, 3);
+        assertEquals(3, result.size());
+        etalon = new LinkedList<>();
+        etalon.add(obj1);
+        etalon.add(obj2);
+        etalon.add(obj3);
+        assertTrue(isTheSame(etalon, result));
+
+        result = tree.findNearestNeighbours(0, 0, 4);
+        assertEquals(4, result.size());
+        etalon = new LinkedList<>();
+        etalon.add(obj1);
+        etalon.add(obj2);
+        etalon.add(obj3);
+        etalon.add(obj4);
+        assertTrue(isTheSame(etalon, result));
+
+
+        result = tree.findNearestNeighbours(0, 0, 5);
+        assertEquals(5, result.size());
+        etalon = new LinkedList<>();
+        etalon.add(obj1);
+        etalon.add(obj2);
+        etalon.add(obj3);
+        etalon.add(obj4);
+        etalon.add(obj5);
+        assertTrue(isTheSame(etalon, result));
+
+    }
+
+
 }
