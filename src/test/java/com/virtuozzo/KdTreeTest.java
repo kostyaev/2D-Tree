@@ -13,7 +13,6 @@ import static org.junit.Assert.assertTrue;
 
 public class KdTreeTest {
 
-
     Node<Object> node1;
     Node<Object> node2;
     Node<Object> node3;
@@ -255,6 +254,40 @@ public class KdTreeTest {
         etalon.add(obj4);
         etalon.add(obj5);
         assertTrue(isTheSame(etalon, result));
+
+    }
+
+
+    @Test
+    public void testDistanceCalculator() {
+        double EPS = 1e-2;
+
+        double mephiLat = 55.649371;
+        double mephiLon = 37.663750;
+        double metroLat = 55.655132;
+        double metroLon = 37.648986;
+
+        double distance = EarthDistance.calculate(mephiLat, mephiLon, metroLat, metroLon);
+        double rightAnswer = 1.12;
+
+        assertTrue(Math.abs(distance - rightAnswer) < EPS);
+
+    }
+
+
+    @Test
+    public void testRangeSearchKm() {
+        KdTree<Object> tree = new KdTree<>();
+
+        double posLat1 = 55.649371;
+        double posLon1 = 37.663750;
+        double posLat2 = 55.655132;
+        double posLon2 = 37.648986;
+
+        tree.insert(new Object(), posLat1, posLon1);
+
+        assertEquals(0, tree.rangeSearchKilometers(posLat2, posLon2, 1.0).size());
+        assertEquals(1, tree.rangeSearchKilometers(posLat1, posLon1, 1.3).size());
 
     }
 

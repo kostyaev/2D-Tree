@@ -111,6 +111,29 @@ public class KdTree<T> {
         }.rangeSearch(root, true);
     }
 
+    public List<T> rangeSearchKilometers(final double x, final double y, final double dist) {
+        return new Object() {
+            List<T> result = new LinkedList<>();
+            List<T> rangeSearch(Node<T> node, boolean divX) {
+                if (node == null)
+                    return result;
+                double d = EarthDistance.calculate(node.coords.x, node.coords.y, x, y);
+                if (dist >= d)
+                    result.add(node.object);
+                double delta = divX ? x - node.coords.x : y - node.coords.y;
+                double delta2 = divX ? EarthDistance.calculate(x, 0, node.coords.x, 0)
+                        : EarthDistance.calculate(0, y, 0, node.coords.y);
+                Node<T> node1 = delta < 0 ? node.left : node.right;
+                Node<T> node2 = delta < 0 ? node.right : node.left;
+                rangeSearch(node1,!divX);
+                if (delta2 < dist) {
+                    rangeSearch(node2, !divX);
+                }
+                return result;
+            }
+        }.rangeSearch(root, true);
+    }
+
 
     public List<T> findNearestNeighbours(final double x, final double y, final int limit) {
         final List<T> result = new LinkedList<>();
