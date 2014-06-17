@@ -1,7 +1,7 @@
 2D-Tree
 =======
 
-2D-Tree is an implementation 2-dimensional tree for range and nearest neighbor searches.
+2D-Tree is an implementation 2-dimensional tree for range and nearest neighbors searches.
 
 ### Tree configuration operations
  - `buildTree(List<Node<T>> nodes` - builds balanced 2d-tree 
