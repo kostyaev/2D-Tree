@@ -13,4 +13,4 @@
  - `findNearestNeighbour(double x, double y)`  - finds the nearest neighbor 
  - `findNearestNeighbours(double x, double y, int k)` - finds k nearest neighbors
  - `rangeSearch(double x, double y, double radius)` - finds neighbors in specified range
- - `rangeSearchKilometers(double x, double y, double radius)` - finds neighbors in specified range assuming that `x` is a latitude, `y` - longitude, `radius` - radius in km.
+ - `rangeSearchKm(double x, double y, double radius)` - finds neighbors in specified range assuming that `x` is a latitude, `y` - longitude, `radius` - radius in km.
