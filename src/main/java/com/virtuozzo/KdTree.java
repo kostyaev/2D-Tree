@@ -46,7 +46,7 @@ public class KdTree<T> {
                 node.coords = nodes.get(mid).coords;
                 node.object = nodes.get(mid).object;
                 node.left = buildTree(!divX, nodes.subList(0, mid));
-                if (mid + 1 < nodes.size() - 1)
+                if (mid + 1 <= nodes.size() - 1)
                     node.right = buildTree(!divX, nodes.subList(mid+1, nodes.size()));
                 return node;
             }
